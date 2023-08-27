@@ -1,4 +1,4 @@
-package views;
+package com.alura.hotel.views;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -18,6 +18,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
+import com.alura.hotel.controller.UsuarioController;
+import com.alura.hotel.modelo.Usuario;
+
 public class Login extends JFrame {
 
 	/**
@@ -27,6 +30,7 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasena;
+	private UsuarioController usuarioController;
 	int xMouse, yMouse;
 	private JLabel labelExit;
 
@@ -50,6 +54,8 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		this.usuarioController = new UsuarioController();
+		
 		setResizable(false);
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -234,20 +240,30 @@ public class Login extends JFrame {
 		header.setLayout(null);
 	}
 	
+/**
+ * Método actualizado para registrar nuevos usuarios a la base de datos de MySql
+ */
 	private void Login() {
-		 String Usuario= "admin";
-	     String Contraseña="admin";
-
-	        String contrase=new String (txtContrasena.getPassword());
-
-	        if(txtUsuario.getText().equals(Usuario) && contrase.equals(Contraseña)){
-	            MenuUsuario menu = new MenuUsuario();
-	            menu.setVisible(true);
-	            dispose();	 
-	        }else {
-	            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
-	        }
-	} 
+		guardar();
+	    MenuUsuario menu = new MenuUsuario();
+	    menu.setVisible(true);
+	    dispose();	 	             
+	}
+	
+	private void guardar() {
+		String clave = new String (txtContrasena.getPassword());
+		if(txtUsuario.getText().isBlank() || clave.isBlank()) {
+			JOptionPane.showMessageDialog(this, "LLene todos los campos requeridos");
+			return;
+		}
+		
+		var usuario = new Usuario(txtUsuario.getText(), clave);
+		
+		this.usuarioController.guardar(usuario);
+		
+		JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+	}
+	
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();
 	        yMouse = evt.getY();

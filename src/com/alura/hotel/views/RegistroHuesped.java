@@ -1,4 +1,4 @@
-package views;
+package com.alura.hotel.views;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
