@@ -261,7 +261,7 @@ public class Login extends JFrame {
 		
 		this.usuarioController.guardar(usuario);
 		
-		JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+		JOptionPane.showMessageDialog(this, "Iniciando sesión!");
 	}
 	
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
