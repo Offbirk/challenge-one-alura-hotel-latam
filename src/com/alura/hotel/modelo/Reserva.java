@@ -21,7 +21,8 @@ public class Reserva {
 		this.formaDePago = formaDePago;
 	}
 
-	public Reserva(Date fechaDeEntrada, Date fechaDeSalida, String Valor, String formaDePago) {
+	public Reserva(Integer id, Date fechaDeEntrada, Date fechaDeSalida, String Valor, String formaDePago) {
+		this.id = id;
 		this.fechaDeEntrada = fechaDeEntrada;
 		this.fechaDeSalida = fechaDeSalida;
 		this.Valor = Valor;

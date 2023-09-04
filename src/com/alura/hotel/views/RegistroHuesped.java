@@ -34,7 +34,7 @@ public class RegistroHuesped extends JFrame {
 	private JTextField txtApellido;
 	private JTextField txtTelefono;
 	private JTextField txtNreserva;
-	Reserva reserva = new Reserva();
+	private Reserva reserva; 
 	private RegistrarHuespedController registrarHuespedController;
 	private JDateChooser txtFechaN;
 	private JComboBox<Format> txtNacionalidad;
@@ -48,8 +48,10 @@ public class RegistroHuesped extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					RegistroHuesped frame = new RegistroHuesped();
+				try {				
+					Reserva reserva = new Reserva();
+					System.out.println("ID de reserva después de pasarlo a RegistroHuesped: " + reserva.getId());
+					RegistroHuesped frame = new RegistroHuesped(reserva);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,7 +63,8 @@ public class RegistroHuesped extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegistroHuesped() {
+	public RegistroHuesped(Reserva reserva) {
+		this.reserva = reserva;
 		this.registrarHuespedController = new RegistrarHuespedController();
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/imagenes/lOGO-50PX.png")));
@@ -100,7 +103,7 @@ public class RegistroHuesped extends JFrame {
 		btnAtras.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ReservasView reservas = new ReservasView();
+				ReservasView reservas = new ReservasView(reserva);
 				reservas.setVisible(true);
 				dispose();				
 			}
@@ -216,7 +219,7 @@ public class RegistroHuesped extends JFrame {
 		txtNreserva.setBackground(Color.WHITE);
 		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		txtNreserva.setText(String.valueOf(reserva.getId()));
-		txtNreserva.setEditable(false); //Esto lo puse yo
+		txtNreserva.setEditable(false);
 		contentPane.add(txtNreserva);
 		
 		JSeparator separator_1_2 = new JSeparator();

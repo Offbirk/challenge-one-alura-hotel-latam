@@ -41,6 +41,7 @@ public class ReservasView extends JFrame {
 	public static JDateChooser txtFechaEntrada;
 	public static JDateChooser txtFechaSalida;
 	public static JComboBox<String> txtFormaPago;
+	private Reserva reserva;
 	private ReservaController reservaController;
 	int xMouse, yMouse;
 	private JLabel labelExit;
@@ -53,7 +54,8 @@ public class ReservasView extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ReservasView frame = new ReservasView();
+					Reserva reserva = new Reserva();					
+					ReservasView frame = new ReservasView(reserva);					
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,8 +67,9 @@ public class ReservasView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ReservasView() {		
+	public ReservasView(Reserva reserva) {		
 		super("Reserva");
+		this.reserva = new Reserva();
 		this.reservaController = new ReservaController();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/imagenes/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -319,7 +322,8 @@ public class ReservasView extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {							
 					guardar();
-					RegistroHuesped registro = new RegistroHuesped();					
+					System.out.println("ID de reserva después de pasarlo a RegistroHuesped: " + reserva.getId());
+					RegistroHuesped registro = new RegistroHuesped(reserva);					
 					registro.setVisible(true);
 					dispose();
 				} else {
@@ -339,7 +343,8 @@ public class ReservasView extends JFrame {
 	 */
 	private void guardar() {
 	    String formaDePago = (String) txtFormaPago.getSelectedItem();
-	    Reserva reserva = new Reserva(txtFechaEntrada.getDate(), txtFechaSalida.getDate(), txtValor.getText(), formaDePago);
+	    Integer numeroDeReserva = reserva.getId();
+	    Reserva reserva = new Reserva(numeroDeReserva, txtFechaEntrada.getDate(), txtFechaSalida.getDate(), txtValor.getText(), formaDePago);
 
 	    // Crea y agrega huéspedes a la reserva
 	    List<RegistrarHuesped> huespedes = new ArrayList<>();
