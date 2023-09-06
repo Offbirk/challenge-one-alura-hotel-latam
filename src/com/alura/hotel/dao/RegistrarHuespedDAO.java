@@ -2,6 +2,7 @@ package com.alura.hotel.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -28,6 +29,13 @@ public class RegistrarHuespedDAO {
 	            statement.setLong(5, registrarHuesped.getTelefono());
 	            statement.setInt(6, reservaId); // Utiliza el ID de reserva
 	            statement.execute();
+	            
+	            final ResultSet resultSet = statement.getGeneratedKeys();
+	            try(resultSet) {
+	            	while(resultSet.next()) {
+	            		registrarHuesped.setReservaId(resultSet.getInt(1));	          
+	            	}
+	            }
 	        }
 
 	    } catch (SQLException e) {

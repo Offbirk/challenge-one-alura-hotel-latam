@@ -13,13 +13,6 @@ public class Reserva {
 
 	public Reserva() {
 	}
-	
-	public Reserva(int id, Date fechaDeEntrada, Date fechaDeSalida, String formaDePago) {
-		this.setId(id);
-		this.fechaDeEntrada = fechaDeEntrada;
-		this.fechaDeSalida = fechaDeSalida;
-		this.formaDePago = formaDePago;
-	}
 
 	public Reserva(Integer id, Date fechaDeEntrada, Date fechaDeSalida, String Valor, String formaDePago) {
 		this.id = id;
@@ -71,5 +64,15 @@ public class Reserva {
 
 	public void setHuespedes(List<RegistrarHuesped> huespedes) {
 	    this.huespedes = huespedes;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format( "{id: %s, fechaDeEntrada: %s, fechaDeSalida: %s, Valor: %s, formaDePago: %s}" , 
+				this.id, 
+				this.fechaDeEntrada,
+				this.fechaDeSalida,
+				this.Valor,
+				this.formaDePago);
 	}
 }

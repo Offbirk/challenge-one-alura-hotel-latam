@@ -344,6 +344,7 @@ public class ReservasView extends JFrame {
 	private void guardar() {
 	    String formaDePago = (String) txtFormaPago.getSelectedItem();
 	    Integer numeroDeReserva = reserva.getId();
+	    
 	    Reserva reserva = new Reserva(numeroDeReserva, txtFechaEntrada.getDate(), txtFechaSalida.getDate(), txtValor.getText(), formaDePago);
 
 	    // Crea y agrega huéspedes a la reserva
@@ -354,6 +355,7 @@ public class ReservasView extends JFrame {
 	    reserva.setHuespedes(huespedes);
 
 	    this.reservaController.guardar(reserva);
+	    System.out.println("Estos son los datos de la reserva que será guardada: " + reserva.toString());
 	}
 
 	

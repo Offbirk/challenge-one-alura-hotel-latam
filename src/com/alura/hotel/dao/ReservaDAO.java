@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.alura.hotel.controller.RegistrarHuespedController;
+import com.alura.hotel.factory.ConnectionFactory;
 import com.alura.hotel.modelo.RegistrarHuesped;
 import com.alura.hotel.modelo.Reserva;
 import com.alura.hotel.views.RegistroHuesped;
@@ -51,4 +54,34 @@ public class ReservaDAO {
 	    }
 	}
 
+	public List<Reserva> listar() {
+		List<Reserva> resultado = new ArrayList<>();
+		
+		ConnectionFactory factory = new ConnectionFactory();
+		final Connection con = factory.recuperaConexion();
+		
+		try (con) {
+			final PreparedStatement statement = con
+					.prepareStatement("SELECT id, Fecha_de_entrada, Fecha_de_salida, Valor, Forma_de_pago FROM Reservas");
+			
+			try(statement) {
+				statement.execute();
+				
+				final ResultSet resultSet = statement.getResultSet();
+				
+				try(resultSet) {
+					while(resultSet.next()) {
+						Reserva fila = new Reserva(resultSet.getInt("id"), resultSet.getDate("Fecha_de_entrada"),
+								resultSet.getDate("Fecha_de_salida"), resultSet.getString("Valor"), resultSet.getString("Forma_de_pago"));
+						
+						resultado.add(fila);
+					}
+				}
+			}
+			return resultado;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}		
+	}
+	
 }
