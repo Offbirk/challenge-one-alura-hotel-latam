@@ -9,30 +9,30 @@ public class RegistrarHuesped {
 	private String apellido;
 	private Date fechaDeNacimiento;
 	private String nacionalidad;
-	private Integer telefono;
+	private Long telefono;
 	private Integer reservaId;	
 
 	public RegistrarHuesped() {
 		
 	}
 	
-	public RegistrarHuesped(Integer id, String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad, Integer telefono) {
+	public RegistrarHuesped(Integer id, String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad, long telefono, int reservaId) {
 		this.id = id;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.fechaDeNacimiento = fechaDeNacimiento;
 		this.nacionalidad = nacionalidad;
 		this.telefono = telefono;
+		this.reservaId = reservaId;
 	}
-	
-	public RegistrarHuesped(String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad, Integer telefono,
-			Integer reservaId) {
+
+	public RegistrarHuesped(String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad, long telefono, int reservaId) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.fechaDeNacimiento = fechaDeNacimiento;
 		this.nacionalidad = nacionalidad;
 		this.telefono = telefono;
-		this.reservaId = reservaId;
+		
 	}
 
 	public Integer getid() {
@@ -63,10 +63,10 @@ public class RegistrarHuesped {
 	public void setNacionalidad(String nacionalidad) {
 		this.nacionalidad = nacionalidad;
 	}
-	public Integer getTelefono() {
+	public Long getTelefono() {
 		return telefono;
 	}
-	public void setTelefono(Integer telefono) {
+	public void setTelefono(Long telefono) {
 		this.telefono = telefono;
 	}
 	
