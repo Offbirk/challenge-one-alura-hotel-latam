@@ -12,7 +12,7 @@ import java.awt.Color;
 import javax.swing.JTextField;
 
 import com.alura.hotel.controller.ReservaController;
-import com.alura.hotel.modelo.RegistrarHuesped;
+import com.alura.hotel.modelo.Huesped;
 import com.alura.hotel.modelo.Reserva;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Font;
@@ -83,9 +83,7 @@ public class ReservasView extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setUndecorated(true);
-		
-
-		
+				
 		JPanel panel = new JPanel();
 		panel.setBorder(null);
 		panel.setBackground(Color.WHITE);
@@ -95,33 +93,28 @@ public class ReservasView extends JFrame {
 		
 		// Código que crea los elementos de la interfáz gráfica
 		
-		JSeparator separator_1_2 = new JSeparator();
-		separator_1_2.setForeground(SystemColor.textHighlight);
-		separator_1_2.setBounds(68, 195, 289, 2);
-		separator_1_2.setBackground(SystemColor.textHighlight);
-		panel.add(separator_1_2);
-		
-		JSeparator separator_1_3 = new JSeparator();
-		separator_1_3.setForeground(SystemColor.textHighlight);
-		separator_1_3.setBackground(SystemColor.textHighlight);
-		separator_1_3.setBounds(68, 453, 289, 2);
-		panel.add(separator_1_3);
-		
-		JSeparator separator_1_1 = new JSeparator();
-		separator_1_1.setForeground(SystemColor.textHighlight);
-		separator_1_1.setBounds(68, 281, 289, 11);
-		separator_1_1.setBackground(SystemColor.textHighlight);
-		panel.add(separator_1_1);
+		/**
+		 * Mejora los separadores del build 
+		 */
+		int yCoordinate = 195; // Coordenada vertical inicial
+		for (int i = 0; i < 4; i++) { // Crear 6 JSeparators
+		    JSeparator separator = new JSeparator();
+		    separator.setBounds(68, yCoordinate, 289, 2);
+		    separator.setForeground(SystemColor.textHighlight);
+		    separator.setBackground(SystemColor.textHighlight);
+		    panel.add(separator);
+		    yCoordinate += 91; // Incrementar la coordenada vertical para la próxima iteración
+		}			
 		
 		JLabel lblCheckIn = new JLabel("FECHA DE CHECK IN");
 		lblCheckIn.setForeground(SystemColor.textInactiveText);
-		lblCheckIn.setBounds(68, 136, 169, 14);
+		lblCheckIn.setBounds(68, 136, 289, 14);
 		lblCheckIn.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		panel.add(lblCheckIn);
 		
 		JLabel lblCheckOut = new JLabel("FECHA DE CHECK OUT");
 		lblCheckOut.setForeground(SystemColor.textInactiveText);
-		lblCheckOut.setBounds(68, 221, 187, 14);
+		lblCheckOut.setBounds(68, 221, 289, 14);
 		lblCheckOut.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		panel.add(lblCheckOut);
 		
@@ -132,7 +125,7 @@ public class ReservasView extends JFrame {
 		panel.add(lblFormaPago);
 		
 		JLabel lblTitulo = new JLabel("SISTEMA DE RESERVAS");
-		lblTitulo.setBounds(109, 60, 219, 42);
+		lblTitulo.setBounds(109, 60, 289, 42);
 		lblTitulo.setForeground(new Color(12, 138, 199));
 		lblTitulo.setFont(new Font("Roboto", Font.BOLD, 20));
 		panel.add(lblTitulo);
@@ -156,15 +149,9 @@ public class ReservasView extends JFrame {
 		
 		JLabel lblValor = new JLabel("VALOR DE LA RESERVA");
 		lblValor.setForeground(SystemColor.textInactiveText);
-		lblValor.setBounds(72, 303, 196, 14);
+		lblValor.setBounds(72, 315, 289, 14);
 		lblValor.setFont(new Font("Roboto Black", Font.PLAIN, 18));
-		panel.add(lblValor);
-		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setForeground(SystemColor.textHighlight);
-		separator_1.setBounds(68, 362, 289, 2);
-		separator_1.setBackground(SystemColor.textHighlight);
-		panel.add(separator_1);
+		panel.add(lblValor);		
 												
 		// Componentes para dejar la interfaz con estilo Material Design
 		JPanel btnexit = new JPanel();
@@ -252,8 +239,7 @@ public class ReservasView extends JFrame {
 		lblSiguiente.setForeground(Color.WHITE);
 		lblSiguiente.setFont(new Font("Roboto", Font.PLAIN, 18));
 		lblSiguiente.setBounds(0, 0, 122, 35);
-		
-		
+				
 		//Campos que guardaremos en la base de datos
 		txtFechaEntrada = new JDateChooser();
 		txtFechaEntrada.getCalendarButton().setBackground(SystemColor.textHighlight);
@@ -300,7 +286,7 @@ public class ReservasView extends JFrame {
 		txtValor.setBackground(SystemColor.text);
 		txtValor.setHorizontalAlignment(SwingConstants.CENTER);
 		txtValor.setForeground(Color.BLACK);
-		txtValor.setBounds(78, 328, 100, 33);
+		txtValor.setBounds(78, 335, 100, 33);
 		txtValor.setEditable(false);
 		txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
 		txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
@@ -322,9 +308,6 @@ public class ReservasView extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {							
 					guardar();
-					System.out.println("ID de reserva después de pasarlo a RegistroHuesped: " + reserva.getId());
-					RegistroHuesped registro = new RegistroHuesped(reserva);					
-					registro.setVisible(true);
 					dispose();
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
@@ -348,7 +331,7 @@ public class ReservasView extends JFrame {
 	    Reserva reserva = new Reserva(numeroDeReserva, txtFechaEntrada.getDate(), txtFechaSalida.getDate(), txtValor.getText(), formaDePago);
 
 	    // Crea y agrega huéspedes a la reserva
-	    List<RegistrarHuesped> huespedes = new ArrayList<>();
+	    List<Huesped> huespedes = new ArrayList<>();
 	    // Agrega tus huéspedes a la lista huespedes
 	    // ...
 
@@ -356,6 +339,9 @@ public class ReservasView extends JFrame {
 
 	    this.reservaController.guardar(reserva);
 	    System.out.println("Estos son los datos de la reserva que será guardada: " + reserva.toString());
+	    
+	    RegistroHuesped frame = new RegistroHuesped(reserva.getId());
+	    frame.setVisible(true);
 	}
 
 	

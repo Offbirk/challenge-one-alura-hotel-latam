@@ -6,19 +6,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.alura.hotel.factory.ConnectionFactory;
-import com.alura.hotel.modelo.RegistrarHuesped;
+import com.alura.hotel.modelo.Huesped;
 
-public class RegistrarHuespedDAO {
+public class HuespedDAO {
 	final private Connection con;
 
-	public RegistrarHuespedDAO(Connection con) {
+	public HuespedDAO(Connection con) {
 		this.con = con;
 	}
 
-	public void guardar(RegistrarHuesped registrarHuesped, int reservaId) {
+	public void guardar(Huesped registrarHuesped, int reservaId) {
 		try {
 			final PreparedStatement statement = con.prepareStatement(
 					"INSERT INTO huespedes(Nombre, Apellido, Fecha_de_nacimiento, Nacionalidad, Telefono, Id_Reserva)"
@@ -47,8 +48,8 @@ public class RegistrarHuespedDAO {
 		}
 	}
 
-	public List<RegistrarHuesped> listar() {
-		List<RegistrarHuesped> resultado = new ArrayList<>();
+	public List<Huesped> listar() {
+		List<Huesped> resultado = new ArrayList<>();
 
 		ConnectionFactory factory = new ConnectionFactory();
 		final Connection con = factory.recuperaConexion();
@@ -64,11 +65,13 @@ public class RegistrarHuespedDAO {
 
 				try (resultSet) {
 					while (resultSet.next()) {
-						RegistrarHuesped fila = new RegistrarHuesped(
+						Huesped fila = new Huesped(
 								resultSet.getInt("id"),
 								resultSet.getString("Nombre"),
-								resultSet.getString("Apellido"), resultSet.getDate("Fecha_de_nacimiento"),
-								resultSet.getString("Nacionalidad"), resultSet.getLong("Telefono"),
+								resultSet.getString("Apellido"), 
+								resultSet.getDate("Fecha_de_nacimiento"),
+								resultSet.getString("Nacionalidad"), 
+								resultSet.getLong("Telefono"),
 								resultSet.getInt("Id_Reserva"));
 						resultado.add(fila);
 					}
@@ -80,7 +83,7 @@ public class RegistrarHuespedDAO {
 		return resultado;
 	}
 
-	public int modificar(Integer id, String nombre, String apellido, String fechaDeNacimiento, String nacionalidad,
+	public int modificar(Integer id, String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad,
 			long telefono, Integer reservaId) {
 		try {
 			final PreparedStatement statement = con.prepareStatement("UPDATE huespedes SET " + " Nombre = ? " + ", Apellido = ?" + ", Fecha_de_nacimiento = ?"
@@ -88,7 +91,7 @@ public class RegistrarHuespedDAO {
 			try (statement) {
 				statement.setString(1, nombre);
 				statement.setString(2, apellido);
-				statement.setString(3, fechaDeNacimiento);
+				statement.setDate(3, (java.sql.Date) fechaDeNacimiento);
 				statement.setString(4, nacionalidad);
 				statement.setLong(5, telefono);
 				statement.setInt(6, reservaId);

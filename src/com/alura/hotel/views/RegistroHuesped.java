@@ -7,8 +7,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import java.awt.Color;
 
-import com.alura.hotel.controller.RegistrarHuespedController;
-import com.alura.hotel.modelo.RegistrarHuesped;
+import com.alura.hotel.controller.HuespedController;
+import com.alura.hotel.modelo.Huesped;
 import com.alura.hotel.modelo.Reserva;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JComboBox;
@@ -34,8 +34,10 @@ public class RegistroHuesped extends JFrame {
 	private JTextField txtApellido;
 	private JTextField txtTelefono;
 	private JTextField txtNreserva;
-	private Reserva reserva; 
-	private RegistrarHuespedController registrarHuespedController;
+	private Reserva reserva;
+	private int reservaId;
+	private Huesped huesped;
+	private HuespedController registrarHuespedController;
 	private JDateChooser txtFechaN;
 	private JComboBox<Format> txtNacionalidad;
 	private JLabel labelExit;
@@ -48,10 +50,9 @@ public class RegistroHuesped extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {				
-					Reserva reserva = new Reserva();
-					System.out.println("ID de reserva después de pasarlo a RegistroHuesped: " + reserva.getId());
-					RegistroHuesped frame = new RegistroHuesped(reserva);
+				try {									
+					int reservaId = 22;
+					RegistroHuesped frame = new RegistroHuesped(reservaId);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,9 +64,10 @@ public class RegistroHuesped extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegistroHuesped(Reserva reserva) {
-		this.reserva = reserva;
-		this.registrarHuespedController = new RegistrarHuespedController();
+	public RegistroHuesped(int reservaId) {
+		this.reservaId = reservaId;
+		this.huesped = new Huesped();
+		this.registrarHuespedController = new HuespedController();
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/imagenes/lOGO-50PX.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -121,6 +123,7 @@ public class RegistroHuesped extends JFrame {
 		btnAtras.setLayout(null);
 		btnAtras.setBackground(new Color(12, 138, 199));
 		btnAtras.setBounds(0, 0, 53, 36);
+		btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		header.add(btnAtras);
 		
 		labelAtras = new JLabel("<");
@@ -154,7 +157,7 @@ public class RegistroHuesped extends JFrame {
 		txtFechaN.setDateFormatString("yyyy-MM-dd");
 		contentPane.add(txtFechaN);
 		
-		txtNacionalidad = new JComboBox();
+		txtNacionalidad = new JComboBox<>();
 		txtNacionalidad.setBounds(560, 350, 289, 36);
 		txtNacionalidad.setBackground(SystemColor.text);
 		txtNacionalidad.setFont(new Font("Roboto", Font.PLAIN, 16));
@@ -218,45 +221,22 @@ public class RegistroHuesped extends JFrame {
 		txtNreserva.setColumns(10);
 		txtNreserva.setBackground(Color.WHITE);
 		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		txtNreserva.setText(String.valueOf(reserva.getId()));
+		txtNreserva.setText(String.valueOf(reservaId));
 		txtNreserva.setEditable(false);
 		contentPane.add(txtNreserva);
 		
-		JSeparator separator_1_2 = new JSeparator();
-		separator_1_2.setBounds(560, 170, 289, 2);
-		separator_1_2.setForeground(new Color(12, 138, 199));
-		separator_1_2.setBackground(new Color(12, 138, 199));
-		contentPane.add(separator_1_2);
-		
-		JSeparator separator_1_2_1 = new JSeparator();
-		separator_1_2_1.setBounds(560, 240, 289, 2);
-		separator_1_2_1.setForeground(new Color(12, 138, 199));
-		separator_1_2_1.setBackground(new Color(12, 138, 199));
-		contentPane.add(separator_1_2_1);
-		
-		JSeparator separator_1_2_2 = new JSeparator();
-		separator_1_2_2.setBounds(560, 314, 289, 2);
-		separator_1_2_2.setForeground(new Color(12, 138, 199));
-		separator_1_2_2.setBackground(new Color(12, 138, 199));
-		contentPane.add(separator_1_2_2);
-		
-		JSeparator separator_1_2_3 = new JSeparator();
-		separator_1_2_3.setBounds(560, 386, 289, 2);
-		separator_1_2_3.setForeground(new Color(12, 138, 199));
-		separator_1_2_3.setBackground(new Color(12, 138, 199));
-		contentPane.add(separator_1_2_3);
-		
-		JSeparator separator_1_2_4 = new JSeparator();
-		separator_1_2_4.setBounds(560, 457, 289, 2);
-		separator_1_2_4.setForeground(new Color(12, 138, 199));
-		separator_1_2_4.setBackground(new Color(12, 138, 199));
-		contentPane.add(separator_1_2_4);
-		
-		JSeparator separator_1_2_5 = new JSeparator();
-		separator_1_2_5.setBounds(560, 529, 289, 2);
-		separator_1_2_5.setForeground(new Color(12, 138, 199));
-		separator_1_2_5.setBackground(new Color(12, 138, 199));
-		contentPane.add(separator_1_2_5);
+		/**
+		 * Mejora los separadores del build 
+		 */
+		int yCoordinate = 170; // Coordenada vertical inicial
+		for (int i = 0; i < 6; i++) { // Crear 6 JSeparators
+		    JSeparator separator = new JSeparator();
+		    separator.setBounds(560, yCoordinate, 289, 2);
+		    separator.setForeground(new Color(12, 138, 199));
+		    separator.setBackground(new Color(12, 138, 199));
+		    contentPane.add(separator);
+		    yCoordinate += 72; // Incrementar la coordenada vertical para la próxima iteración
+		}
 		
 		JPanel btnguardar = new JPanel();
 		btnguardar.setBounds(723, 560, 122, 35);
@@ -299,7 +279,7 @@ public class RegistroHuesped extends JFrame {
 		
 		JPanel btnexit = new JPanel();
 		btnexit.setBounds(857, 0, 53, 36);
-		contentPane.add(btnexit);
+		header.add(btnexit);
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -320,6 +300,7 @@ public class RegistroHuesped extends JFrame {
 		});
 		btnexit.setLayout(null);
 		btnexit.setBackground(Color.white);
+		btnexit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		
 		labelExit = new JLabel("X");
 		labelExit.setBounds(0, 0, 53, 36);
@@ -331,13 +312,15 @@ public class RegistroHuesped extends JFrame {
 	
 	//TODO
 	private void guardar() {
-		Integer id = Integer.parseInt(txtNreserva.getText());
+		Integer reservaId = Integer.parseInt(txtNreserva.getText());
 		String nacionalidadSeleccionada = (String) txtNacionalidad.getSelectedItem();
-		Integer telefono = Integer.parseInt(txtTelefono.getText());
+		Long telefono = Long.parseLong(txtTelefono.getText());
+		Integer numeroDeHuesped = huesped.getid();
 		
-		var registro = new RegistrarHuesped(txtNombre.getText(), txtApellido.getText(), txtFechaN.getDate(), nacionalidadSeleccionada, telefono, id);
+		var registro = new Huesped(numeroDeHuesped, txtNombre.getText(), txtApellido.getText(), txtFechaN.getDate(), nacionalidadSeleccionada, telefono, reservaId);
 
-		this.registrarHuespedController.guardar(registro, id);
+		this.registrarHuespedController.guardar(registro, reservaId);
+		System.out.println("Estos son los datos del huesped: " + registro.toString());
 	}
 	
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	

@@ -6,17 +6,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import com.alura.hotel.controller.RegistrarHuespedController;
+import com.alura.hotel.controller.HuespedController;
 import com.alura.hotel.factory.ConnectionFactory;
-import com.alura.hotel.modelo.RegistrarHuesped;
+import com.alura.hotel.modelo.Huesped;
 import com.alura.hotel.modelo.Reserva;
 import com.alura.hotel.views.RegistroHuesped;
 
 public class ReservaDAO {
 	final private Connection con;
-	RegistrarHuespedController controller = new RegistrarHuespedController();
+	HuespedController controller = new HuespedController();
 
 	public ReservaDAO(Connection con) {
 		this.con = con;
@@ -45,7 +46,7 @@ public class ReservaDAO {
 			}
 
 			// Luego, guarda los huéspedes asociados a esta reserva.
-			for (RegistrarHuesped huesped : reserva.getHuespedes()) {
+			for (Huesped huesped : reserva.getHuespedes()) {
 				huesped.setReservaId(reserva.getId()); // Establece el ID de reserva
 				controller.guardar(huesped, reserva.getId());
 			}
@@ -86,13 +87,13 @@ public class ReservaDAO {
 		return resultado;
 	}
 
-	public int modificar(Integer id, String fechaDeEntrada, String fechaDeSalida, String valor, String formaDePago) {
+	public int modificar(Integer id, Date fechaDeEntrada, Date fechaDeSalida, String valor, String formaDePago) {
 		try {
 			final PreparedStatement statement = con.prepareStatement("UPDATE Reservas SET " + " Fecha_de_entrada = ? "
 					+ ", Fecha_de_salida = ?" + ", Valor = ?" + ", Forma_de_pago = ?" + "WHERE id =?");
 			try (statement) {
-				statement.setString(1, fechaDeEntrada);
-				statement.setString(2, fechaDeSalida);
+				statement.setDate(1, (java.sql.Date) fechaDeEntrada);
+				statement.setDate(2, (java.sql.Date) fechaDeSalida);
 				statement.setString(3, valor);
 				statement.setString(4, formaDePago);
 				statement.setInt(5, id);

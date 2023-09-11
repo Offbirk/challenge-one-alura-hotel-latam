@@ -1,5 +1,6 @@
 package com.alura.hotel.controller;
 
+import java.sql.Date;
 import java.util.List;
 
 import com.alura.hotel.dao.ReservaDAO;
@@ -38,7 +39,7 @@ public class ReservaController {
 	 * @param formaDePago
 	 * @return ejecuta acciones en el view busqueda
 	 */
-	public int modificar(Integer id, String fechaDeEntrada, String fechaDeSalida, String valor, String formaDePago) {
+	public int modificar(Integer id, Date fechaDeEntrada, Date fechaDeSalida, String valor, String formaDePago) {
 		return reservaDAO.modificar(id, fechaDeEntrada, fechaDeSalida, valor, formaDePago);
 	}
 

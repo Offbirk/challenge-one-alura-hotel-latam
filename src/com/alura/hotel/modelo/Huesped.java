@@ -2,7 +2,7 @@ package com.alura.hotel.modelo;
 
 import java.util.Date;
 
-public class RegistrarHuesped {
+public class Huesped {
 	
 	private Integer id;
 	private String nombre;
@@ -12,11 +12,11 @@ public class RegistrarHuesped {
 	private Long telefono;
 	private Integer reservaId;	
 
-	public RegistrarHuesped() {
+	public Huesped() {
 		
 	}
 	
-	public RegistrarHuesped(Integer id, String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad, long telefono, int reservaId) {
+	public Huesped(Integer id, String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad, long telefono, Integer reservaId) {
 		this.id = id;
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -24,15 +24,6 @@ public class RegistrarHuesped {
 		this.nacionalidad = nacionalidad;
 		this.telefono = telefono;
 		this.reservaId = reservaId;
-	}
-
-	public RegistrarHuesped(String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad, long telefono, int reservaId) {
-		this.nombre = nombre;
-		this.apellido = apellido;
-		this.fechaDeNacimiento = fechaDeNacimiento;
-		this.nacionalidad = nacionalidad;
-		this.telefono = telefono;
-		
 	}
 
 	public Integer getid() {
@@ -77,4 +68,12 @@ public class RegistrarHuesped {
 	public void setReservaId(Integer reservaId) {
 		this.reservaId = reservaId;
 	}
+
+	@Override
+	public String toString() {
+		return "Huesped [id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", fechaDeNacimiento="
+				+ fechaDeNacimiento + ", nacionalidad=" + nacionalidad + ", telefono=" + telefono + ", reservaId="
+				+ reservaId + "]";
+	}
+		
 }

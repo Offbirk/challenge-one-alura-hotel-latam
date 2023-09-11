@@ -9,7 +9,7 @@ public class Reserva {
 	private String Valor;
 	private Date fechaDeSalida;
 	private String formaDePago;
-	private List<RegistrarHuesped> huespedes;		
+	private List<Huesped> huespedes;		
 
 	public Reserva() {
 	}
@@ -58,11 +58,11 @@ public class Reserva {
 		this.id = id;
 	}
 	
-	public List<RegistrarHuesped> getHuespedes() {
+	public List<Huesped> getHuespedes() {
 	    return huespedes;
 	}
 
-	public void setHuespedes(List<RegistrarHuesped> huespedes) {
+	public void setHuespedes(List<Huesped> huespedes) {
 	    this.huespedes = huespedes;
 	}
 	
