@@ -22,6 +22,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.awt.Toolkit;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
@@ -214,7 +216,6 @@ public class RegistroHuesped extends JFrame {
 		lblNumeroReserva.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		contentPane.add(lblNumeroReserva);
 		
-		//TODO
 		txtNreserva = new JTextField();
 		txtNreserva.setFont(new Font("Roboto", Font.PLAIN, 16));
 		txtNreserva.setBounds(560, 495, 285, 33);
@@ -243,6 +244,33 @@ public class RegistroHuesped extends JFrame {
 		btnguardar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				String nombre = txtNombre.getText();
+				if(nombre.isEmpty() || !nombre.matches("[a-zA-Z]+")) {
+					JOptionPane.showMessageDialog(null, "El nombre debe contener solo letras");
+					return;
+				} 
+				String apellido = txtApellido.getText();
+				if(apellido.isEmpty() || !apellido.matches("[a-zA-Z]+")) {
+					JOptionPane.showMessageDialog(null, "El apellido debe contener solo letras");
+					return;
+				}
+				Date fechaSeleccionada = txtFechaN.getDate();
+				if (fechaSeleccionada == null) {
+				    JOptionPane.showMessageDialog(null, "Seleccione una fecha válida.");
+				    return; 
+				}
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String fechaTextoSeleccionada = dateFormat.format(fechaSeleccionada);
+				String fechaTextoCampo = txtFechaN.getDateFormatString();
+				if (fechaTextoSeleccionada.equals(fechaTextoCampo)) {
+				    JOptionPane.showMessageDialog(null, "La fecha debe tener el formato 'yyyy-MM-dd'.");
+				    return; 
+				}
+				String telefono = txtTelefono.getText();
+				if(telefono.isEmpty() || !telefono.matches("\\d+")) {
+					JOptionPane.showMessageDialog(null, "Campo requerido. El teléfono debe contener solo números");
+					return;
+				}
 				guardar();
 				Exito exito = new Exito();
 				exito.setVisible(true);
@@ -321,6 +349,7 @@ public class RegistroHuesped extends JFrame {
 
 		this.registrarHuespedController.guardar(registro, reservaId);
 		System.out.println("Estos son los datos del huesped: " + registro.toString());
+		JOptionPane.showMessageDialog(null, "Datos del huesped: \n" + registro.toString());
 	}
 	
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	

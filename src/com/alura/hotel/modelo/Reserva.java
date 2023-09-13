@@ -68,7 +68,7 @@ public class Reserva {
 	
 	@Override
 	public String toString() {
-		return String.format( "{id: %s, fechaDeEntrada: %s, fechaDeSalida: %s, Valor: %s, formaDePago: %s}" , 
+		return String.format("id: %s%nfechaDeEntrada: %s%nfechaDeSalida: %s%nValor: %s%nformaDePago: %s" , 
 				this.id, 
 				this.fechaDeEntrada,
 				this.fechaDeSalida,

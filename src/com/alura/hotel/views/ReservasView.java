@@ -339,6 +339,7 @@ public class ReservasView extends JFrame {
 
 	    this.reservaController.guardar(reserva);
 	    System.out.println("Estos son los datos de la reserva que será guardada: " + reserva.toString());
+	    JOptionPane.showMessageDialog(null, "Datos de la reserva creada: \n" + reserva.toString());
 	    
 	    RegistroHuesped frame = new RegistroHuesped(reserva.getId());
 	    frame.setVisible(true);
