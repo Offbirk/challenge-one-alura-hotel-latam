@@ -10,10 +10,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.alura.hotel.controller.HuespedController;
-import com.alura.hotel.factory.ConnectionFactory;
 import com.alura.hotel.modelo.Huesped;
 import com.alura.hotel.modelo.Reserva;
-import com.alura.hotel.views.RegistroHuesped;
 
 public class ReservaDAO {
 	final private Connection con;
@@ -56,35 +54,32 @@ public class ReservaDAO {
 		}
 	}
 
-	public List<Reserva> listar() {
-		List<Reserva> resultado = new ArrayList<>();
-
-		ConnectionFactory factory = new ConnectionFactory();
-		final Connection con = factory.recuperaConexion();
-
-		try (con) {
-			final PreparedStatement statement = con.prepareStatement(
-					"SELECT id, Fecha_de_entrada, Fecha_de_salida, Valor, Forma_de_pago FROM Reservas");
-
-			try (statement) {
-				statement.execute();
-
-				final ResultSet resultSet = statement.getResultSet();
-
-				try (resultSet) {
-					while (resultSet.next()) {
-						Reserva fila = new Reserva(resultSet.getInt("id"), resultSet.getDate("Fecha_de_entrada"),
-								resultSet.getDate("Fecha_de_salida"), resultSet.getString("Valor"),
-								resultSet.getString("Forma_de_pago"));
-
-						resultado.add(fila);
-					}
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-		return resultado;
+	public List<Reserva> buscarPorId(String criterio) {
+		List<Reserva> resultados = new ArrayList<>();
+		
+		try {
+	        int idReserva = Integer.parseInt(criterio);
+	        
+	        final String query = "SELECT * FROM Reservas WHERE id = ?";
+	        final PreparedStatement stmt = con.prepareStatement(query);
+	        stmt.setInt(1, idReserva);
+	        final ResultSet resultSet = stmt.executeQuery();
+	        try (resultSet) {
+	            while (resultSet.next()) {
+	                Reserva fila;
+	                fila = new Reserva(
+	                        resultSet.getInt("id"),
+	                        resultSet.getDate("Fecha_de_entrada"),
+	                        resultSet.getDate("Fecha_de_salida"), 
+	                        resultSet.getString("Valor"),
+	                        resultSet.getString("Forma_de_pago")); 
+	                resultados.add(fila);
+	            }
+	        }
+	    } catch (NumberFormatException | SQLException e) {
+	        throw new RuntimeException(e);
+	    }
+		return resultados;
 	}
 
 	public int modificar(Integer id, Date fechaDeEntrada, Date fechaDeSalida, String valor, String formaDePago) {

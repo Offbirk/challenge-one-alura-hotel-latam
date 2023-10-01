@@ -350,7 +350,7 @@ public class RegistroHuesped extends JFrame {
 
 		this.registrarHuespedController.guardar(registro, reservaId);
 		System.out.println("Estos son los datos del huesped: " + registro.toString());
-		JOptionPane.showMessageDialog(null, "Datos del huesped: \n" + registro.toString());
+		JOptionPane.showMessageDialog(null, "El número de la reserva realizada es: \n" + reservaId);
 	}
 	
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	

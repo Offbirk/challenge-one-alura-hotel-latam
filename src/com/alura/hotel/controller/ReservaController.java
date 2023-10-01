@@ -17,19 +17,15 @@ public class ReservaController {
 	public void guardar(Reserva reserva) {
 		reservaDAO.guardar(reserva);
 	}
-	
-	//TODO
-	public List<Reserva> cargarTablaReserva() {
-		return this.reservaDAO.listar();
-	}
-	
+		
 	/**
 	 * 
 	 * @return permite mostrar los datos de la reserva en el view busqueda
 	 */
-	public List<Reserva> listar() {
-		return reservaDAO.listar();
-	}
+	public List<Reserva> buscarPorCriterio(String criterio) {		
+		return reservaDAO.buscarPorId(criterio);
+	}	
+	
 	/**
 	 * 
 	 * @param id
@@ -46,5 +42,4 @@ public class ReservaController {
 	public int eliminar(Integer id) {
 		return reservaDAO.eliminar(id);
 	}
-
 }

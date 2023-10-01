@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.alura.hotel.factory.ConnectionFactory;
 import com.alura.hotel.modelo.Huesped;
 
@@ -76,16 +78,14 @@ public class HuespedDAO {
 	            }
 	        }
 	    } catch (NumberFormatException | SQLException e) {
-	        // Si lanza una excepción, el criterio no es un número válido
-	        // Realiza la búsqueda por apellido en la base de datos
-	        resultados = buscarPorApellido(criterio); // Llama a un método para buscar por apellido
+	        throw new RuntimeException(e);
 	    }
 	    
 	    return resultados;
 	}
 
 	// Método para buscar por apellido
-	private List<Huesped> buscarPorApellido(String apellido) {
+	public List<Huesped> buscarPorApellido(String apellido) {
 	    List<Huesped> resultados = new ArrayList<>();
 	    
 	    try {
@@ -108,47 +108,10 @@ public class HuespedDAO {
 	            }
 	        }
 	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        // Maneja la excepción de manera apropiada
+	    	throw new RuntimeException(e);
 	    }
 	    
 	    return resultados;
-	}
-
-
-	public List<Huesped> listar() {
-		List<Huesped> resultado = new ArrayList<>();
-
-		ConnectionFactory factory = new ConnectionFactory();
-		final Connection con = factory.recuperaConexion();
-
-		try (con) {
-			final PreparedStatement statement = con.prepareStatement(
-					"SELECT id, Nombre, Apellido, Fecha_de_nacimiento, Nacionalidad, Telefono, Id_Reserva FROM huespedes");
-
-			try (statement) {
-				statement.execute();
-
-				final ResultSet resultSet = statement.getResultSet();
-
-				try (resultSet) {
-					while (resultSet.next()) {
-						Huesped fila = new Huesped(
-								resultSet.getInt("id"),
-								resultSet.getString("Nombre"),
-								resultSet.getString("Apellido"), 
-								resultSet.getDate("Fecha_de_nacimiento"),
-								resultSet.getString("Nacionalidad"), 
-								resultSet.getLong("Telefono"),
-								resultSet.getInt("Id_Reserva"));
-						resultado.add(fila);
-					}
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-		return resultado;
 	}
 
 	public int modificar(Integer id, String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad,

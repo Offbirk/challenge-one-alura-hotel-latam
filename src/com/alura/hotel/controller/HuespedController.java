@@ -23,9 +23,9 @@ public class HuespedController {
 	public List<Huesped> buscarPorCriterio(String criterio) {
 	    return registrarHuespedDAO.buscarPorCriterio(criterio);
 	}
-
-	public List<Huesped> listar() {
-		return registrarHuespedDAO.listar();
+	
+	public List<Huesped> buscarPorApellido(String criterio) {
+		return registrarHuespedDAO.buscarPorApellido(criterio);
 	}
 
 	public int modificar(Integer id, String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad,

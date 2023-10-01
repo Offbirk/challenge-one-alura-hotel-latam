@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 
 import com.alura.hotel.controller.HuespedController;
 import com.alura.hotel.controller.ReservaController;
+import com.alura.hotel.modelo.Huesped;
+import com.alura.hotel.modelo.Reserva;
 
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -18,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.util.List;
 import java.util.Optional;
 import javax.swing.JTabbedPane;
 import java.awt.Toolkit;
@@ -222,13 +225,6 @@ public class Busqueda extends JFrame {
 		componenteEditar();
 		componenteEliminar();
 	}
-
-	private void limpiarTabla() {
-		//modelo.getDataVector().clear();
-		//modeloHuesped.getDataVector().clear();
-		modelo.setRowCount(0);
-		modeloHuesped.setRowCount(0);
-	}
 	
 	/**
 	 * Componente que obtiene los valores de busqueda
@@ -240,14 +236,22 @@ public class Busqueda extends JFrame {
 		contentPane.add(txtBuscar);
 		txtBuscar.setColumns(10);
 		
+		
 		JPanel btnbuscar = new JPanel();
 		btnbuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO
-				cargarTablaHuespedes();
-			}
-		});
+				String criterio = txtBuscar.getText();
+		        if (!criterio.isEmpty()) {
+		        	//TODO		            
+		            cargarTablaReserva();
+		            cargarTablaHuespedes();
+		        } else {	
+		        	var mensaje = "Debe escribir el apellido o el Id para realizar la búsqueda";	        	
+		            JOptionPane.showMessageDialog(contentPane, mensaje, "Advertencia", JOptionPane.WARNING_MESSAGE);
+		        }
+		    }
+			});
 		btnbuscar.setLayout(null);
 		btnbuscar.setBackground(new Color(12, 138, 199));
 		btnbuscar.setBounds(748, 125, 122, 35);
@@ -302,7 +306,6 @@ public class Busqueda extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				eliminar();
-				limpiarTabla();
 				cargarTablaReserva();
 				cargarTablaHuespedes();
 			}
@@ -423,26 +426,54 @@ public class Busqueda extends JFrame {
 	 * Permite cargar los datos de la tabla Reservas de MySql
 	 */
 	private void cargarTablaReserva() {
+		modelo.setRowCount(0);
+		String criterio = txtBuscar.getText();
 
-		var datos = this.reservaController.listar();
+		if (!criterio.isEmpty()) {
+			List<Reserva> datos;
 
-		datos.forEach(reserva -> modelo.addRow(new Object[] { reserva.getId(), reserva.getFechaDeEntrada(),
-				reserva.getFechaDeSalida(), reserva.getValor(), reserva.getFormaDePago() }));
+			try {
+				int idReserva = Integer.parseInt(criterio);
+				datos = this.reservaController.buscarPorCriterio(criterio);
+			} catch (NumberFormatException e) {
+				// Manejo de excepción: mostrar mensaje de error al usuario
+                JOptionPane.showMessageDialog(this, "Error al buscar en la tabla Reservas: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                // Registrar la excepción en un registro de errores si es necesario
+                e.printStackTrace();
+                return; // Salir de la función para evitar procesar datos incorrectos
+			}
+			
+				datos.forEach(reserva -> modelo.addRow(new Object[] { reserva.getId(), reserva.getFechaDeEntrada(),
+						reserva.getFechaDeSalida(), reserva.getValor(), reserva.getFormaDePago() }));
+			
+		}
 	}
 
+	/**
+	 * Carga la tabla de Huespedes siguiendo dos criterios de búsqueda: apellido o IdReserva
+	 */
 	private void cargarTablaHuespedes() {
-		 modeloHuesped.setRowCount(0); // Limpia la tabla antes de cargar nuevos datos
-		    String criterio = txtBuscar.getText();
-		    
-		    if (!criterio.isEmpty()) {
-		        var datos = this.huespedController.buscarPorCriterio(criterio); // Reemplaza con el método adecuado
-		        datos.forEach(huesped -> modeloHuesped.addRow(new Object[] { huesped.getid(), huesped.getNombre(),
-		                huesped.getApellido(), huesped.getFechaDeNacimiento(), huesped.getNacionalidad(), huesped.getTelefono(),
-		                huesped.getReservaId() }));
-		    } else {
-		        JOptionPane.showMessageDialog(this, "Debe escribir el apellido o el Id para realizar la búsqueda");
-		    }		    
+	    modeloHuesped.setRowCount(0); // Limpia la tabla antes de cargar nuevos datos
+	    String criterio = txtBuscar.getText();
+	    
+	    if (!criterio.isEmpty()) {
+	        List<Huesped> datos;
+	        
+	        try {
+	            int idReserva = Integer.parseInt(criterio);
+	            datos = this.huespedController.buscarPorCriterio(criterio); // Llama a buscarPorCriterio por número de ID
+	        } catch (NumberFormatException e) {
+	            datos = this.huespedController.buscarPorApellido(criterio); // Llama a buscarPorApellido por apellido
+	        }
+	        	        
+	            datos.forEach(huesped -> modeloHuesped.addRow(new Object[] { huesped.getid(), huesped.getNombre(),
+	                    huesped.getApellido(), huesped.getFechaDeNacimiento(), huesped.getNacionalidad(), huesped.getTelefono(),
+	                    huesped.getReservaId() }));
+	        
+	    }
 	}
+
 
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 	private void headerMousePressed(java.awt.event.MouseEvent evt) {
