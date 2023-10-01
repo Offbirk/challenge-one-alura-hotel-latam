@@ -48,6 +48,74 @@ public class HuespedDAO {
 		}
 	}
 
+	public List<Huesped> buscarPorCriterio(String criterio) {
+	    List<Huesped> resultados = new ArrayList<>();
+	    
+	    try {
+	        // Intenta parsear el criterio como un entero (ID de reserva)
+	        int idReserva = Integer.parseInt(criterio);
+	        
+	        // Si no lanza una excepción, significa que es un número válido
+	        // Realiza la búsqueda por ID de reserva en la base de datos
+	        final String query = "SELECT * FROM huespedes WHERE Id_Reserva = ?";
+	        final PreparedStatement stmt = con.prepareStatement(query);
+	        stmt.setInt(1, idReserva);
+	        final ResultSet resultSet = stmt.executeQuery(); // Usar executeQuery en lugar de execute
+	        try (resultSet) {
+	            while (resultSet.next()) {
+	                Huesped fila;
+	                fila = new Huesped(
+	                        resultSet.getInt("id"),
+	                        resultSet.getString("Nombre"),
+	                        resultSet.getString("Apellido"), 
+	                        resultSet.getDate("Fecha_de_nacimiento"),
+	                        resultSet.getString("Nacionalidad"), 
+	                        resultSet.getLong("Telefono"),
+	                        resultSet.getInt("Id_Reserva"));
+	                resultados.add(fila);
+	            }
+	        }
+	    } catch (NumberFormatException | SQLException e) {
+	        // Si lanza una excepción, el criterio no es un número válido
+	        // Realiza la búsqueda por apellido en la base de datos
+	        resultados = buscarPorApellido(criterio); // Llama a un método para buscar por apellido
+	    }
+	    
+	    return resultados;
+	}
+
+	// Método para buscar por apellido
+	private List<Huesped> buscarPorApellido(String apellido) {
+	    List<Huesped> resultados = new ArrayList<>();
+	    
+	    try {
+	        final String query = "SELECT * FROM huespedes WHERE Apellido LIKE ?";
+	        final PreparedStatement stmt = con.prepareStatement(query);
+	        stmt.setString(1, "%" + apellido + "%"); // Usamos % para buscar coincidencias parciales
+	        final ResultSet resultSet = stmt.executeQuery();
+	        try (resultSet) {
+	            while (resultSet.next()) {
+	                Huesped fila;
+	                fila = new Huesped(
+	                        resultSet.getInt("id"),
+	                        resultSet.getString("Nombre"),
+	                        resultSet.getString("Apellido"), 
+	                        resultSet.getDate("Fecha_de_nacimiento"),
+	                        resultSet.getString("Nacionalidad"), 
+	                        resultSet.getLong("Telefono"),
+	                        resultSet.getInt("Id_Reserva"));
+	                resultados.add(fila);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        // Maneja la excepción de manera apropiada
+	    }
+	    
+	    return resultados;
+	}
+
+
 	public List<Huesped> listar() {
 		List<Huesped> resultado = new ArrayList<>();
 

@@ -66,6 +66,7 @@ public class RegistroHuesped extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public RegistroHuesped(int reservaId) {
 		this.reservaId = reservaId;
 		this.huesped = new Huesped();

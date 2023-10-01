@@ -14,15 +14,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import java.awt.Color;
-import java.awt.SystemColor;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.Optional;
-import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
 import java.awt.Toolkit;
 import javax.swing.SwingConstants;
@@ -70,6 +66,7 @@ public class Busqueda extends JFrame {
 	public Busqueda() {
 		this.reservaController = new ReservaController();
 		this.huespedController = new HuespedController();
+		txtBuscar = new JTextField();
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Busqueda.class.getResource("/imagenes/lupa2.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 571);
@@ -79,13 +76,7 @@ public class Busqueda extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
-		setUndecorated(true);
-
-		txtBuscar = new JTextField();
-		txtBuscar.setBounds(536, 127, 193, 31);
-		txtBuscar.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		contentPane.add(txtBuscar);
-		txtBuscar.setColumns(10);
+		setUndecorated(true);		
 
 		JLabel lblNewLabel_4 = new JLabel("SISTEMA DE BÚSQUEDA");
 		lblNewLabel_4.setForeground(new Color(12, 138, 199));
@@ -225,13 +216,36 @@ public class Busqueda extends JFrame {
 		separator_1_2.setForeground(new Color(12, 138, 199));
 		separator_1_2.setBackground(new Color(12, 138, 199));
 		separator_1_2.setBounds(539, 159, 193, 2);
-		contentPane.add(separator_1_2);
+		contentPane.add(separator_1_2);		
+		
+		componenteBuscar();
+		componenteEditar();
+		componenteEliminar();
+	}
 
+	private void limpiarTabla() {
+		//modelo.getDataVector().clear();
+		//modeloHuesped.getDataVector().clear();
+		modelo.setRowCount(0);
+		modeloHuesped.setRowCount(0);
+	}
+	
+	/**
+	 * Componente que obtiene los valores de busqueda
+	 */
+	void componenteBuscar() {
+		txtBuscar = new JTextField();
+		txtBuscar.setBounds(536, 127, 193, 31);
+		txtBuscar.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		contentPane.add(txtBuscar);
+		txtBuscar.setColumns(10);
+		
 		JPanel btnbuscar = new JPanel();
 		btnbuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO
+				cargarTablaHuespedes();
 			}
 		});
 		btnbuscar.setLayout(null);
@@ -246,7 +260,12 @@ public class Busqueda extends JFrame {
 		lblBuscar.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBuscar.setForeground(Color.WHITE);
 		lblBuscar.setFont(new Font("Roboto", Font.PLAIN, 18));
-
+	}	
+	
+	/**
+	 * Componente que permite editar los valores de una tabla
+	 */
+	void componenteEditar() {
 		JPanel btnEditar = new JPanel();
 		btnEditar.setLayout(null);
 		btnEditar.setBackground(new Color(12, 138, 199));
@@ -268,7 +287,12 @@ public class Busqueda extends JFrame {
 		lblEditar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		lblEditar.setBounds(0, 0, 122, 35);
 		btnEditar.add(lblEditar);
-
+	}
+	
+	/**
+	 * Componente que permite eliminar un registro de la tabla
+	 */
+	void componenteEliminar() {
 		JPanel btnEliminar = new JPanel();
 		btnEliminar.setLayout(null);
 		btnEliminar.setBackground(new Color(12, 138, 199));
@@ -293,14 +317,7 @@ public class Busqueda extends JFrame {
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
 	}
-
-	private void limpiarTabla() {
-		modelo.getDataVector().clear();
-		modeloHuesped.getDataVector().clear();
-	}
 	
-	private boolean tablaReservaSeleccionada = true;
-	private boolean tablaHuespedSeleccionada = false;
 
 	private boolean tieneFilaElegida() {
 		return tbReservas.getSelectedRowCount() == 0 || tbReservas.getSelectedColumnCount() == 0;
@@ -310,13 +327,9 @@ public class Busqueda extends JFrame {
 		return tbHuespedes.getSelectedRowCount() == 0 || tbHuespedes.getSelectedColumnCount() == 0;
 	}
 	
-	private void editar() {
-		if(tablaReservaSeleccionada) {
+	private void editar() {		
 			editarTablaReserva();
-		}
-		if(tablaHuespedSeleccionada) {
-			editarTablaHuesped();
-		}
+			editarTablaHuesped();		
 	}
 	
 	private void editarTablaReserva() {
@@ -364,12 +377,8 @@ public class Busqueda extends JFrame {
 	}
 	
 	private void eliminar() {
-		if(tablaReservaSeleccionada) {
 			eliminarfilaReserva();
-		}
-		if(tablaHuespedSeleccionada) {
-			eliminarfilaHuesped();
-		}
+			eliminarfilaHuesped();		
 	}
 	
 	private void eliminarfilaReserva() {
@@ -391,6 +400,7 @@ public class Busqueda extends JFrame {
 
 					}, () -> JOptionPane.showMessageDialog(this, "Por favor, elija una reserva"));
 		} 
+	
 	private void eliminarfilaHuesped() {
 		if (tieneFilaElegida1()) {
 			JOptionPane.showMessageDialog(this, "Por favor, elija una fila");
@@ -413,8 +423,7 @@ public class Busqueda extends JFrame {
 	 * Permite cargar los datos de la tabla Reservas de MySql
 	 */
 	private void cargarTablaReserva() {
-		tablaReservaSeleccionada = true;
-		tablaHuespedSeleccionada = false;
+
 		var datos = this.reservaController.listar();
 
 		datos.forEach(reserva -> modelo.addRow(new Object[] { reserva.getId(), reserva.getFechaDeEntrada(),
@@ -422,13 +431,17 @@ public class Busqueda extends JFrame {
 	}
 
 	private void cargarTablaHuespedes() {
-		tablaReservaSeleccionada = false;
-		tablaHuespedSeleccionada = true;
-		var datos = this.huespedController.listar();
-
-		datos.forEach(huesped -> modeloHuesped.addRow(new Object[] { huesped.getid(), huesped.getNombre(),
-				huesped.getApellido(), huesped.getFechaDeNacimiento(), huesped.getNacionalidad(), huesped.getTelefono(),
-				huesped.getReservaId() }));
+		 modeloHuesped.setRowCount(0); // Limpia la tabla antes de cargar nuevos datos
+		    String criterio = txtBuscar.getText();
+		    
+		    if (!criterio.isEmpty()) {
+		        var datos = this.huespedController.buscarPorCriterio(criterio); // Reemplaza con el método adecuado
+		        datos.forEach(huesped -> modeloHuesped.addRow(new Object[] { huesped.getid(), huesped.getNombre(),
+		                huesped.getApellido(), huesped.getFechaDeNacimiento(), huesped.getNacionalidad(), huesped.getTelefono(),
+		                huesped.getReservaId() }));
+		    } else {
+		        JOptionPane.showMessageDialog(this, "Debe escribir el apellido o el Id para realizar la búsqueda");
+		    }		    
 	}
 
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"

@@ -20,6 +20,10 @@ public class HuespedController {
 		registrarHuespedDAO.guardar(registrarHuesped, reservaId);
 	}
 
+	public List<Huesped> buscarPorCriterio(String criterio) {
+	    return registrarHuespedDAO.buscarPorCriterio(criterio);
+	}
+
 	public List<Huesped> listar() {
 		return registrarHuespedDAO.listar();
 	}
