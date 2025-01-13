@@ -26,15 +26,6 @@ public class ReservaController {
 		return reservaDAO.buscarPorId(criterio);
 	}	
 	
-	/**
-	 * 
-	 * @param id
-	 * @param fechaDeEntrada
-	 * @param fechaDeSalida
-	 * @param valor
-	 * @param formaDePago
-	 * @return ejecuta acciones en el view busqueda
-	 */
 	public int modificar(Integer id, Date fechaDeEntrada, Date fechaDeSalida, String valor, String formaDePago) {
 		return reservaDAO.modificar(id, fechaDeEntrada, fechaDeSalida, valor, formaDePago);
 	}

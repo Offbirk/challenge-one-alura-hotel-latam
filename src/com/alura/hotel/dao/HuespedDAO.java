@@ -5,13 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
-import com.alura.hotel.factory.ConnectionFactory;
 import com.alura.hotel.modelo.Huesped;
 
 public class HuespedDAO {
@@ -50,7 +47,7 @@ public class HuespedDAO {
 		}
 	}
 
-	public List<Huesped> buscarPorCriterio(String criterio) {
+	public List<Huesped> buscarPorId(String criterio) {
 	    List<Huesped> resultados = new ArrayList<>();
 	    
 	    try {
@@ -114,11 +111,16 @@ public class HuespedDAO {
 	    return resultados;
 	}
 
+	//Editar valores en una tabla cargada
+	public void editarValores() {
+		
+	}
+	
 	public int modificar(Integer id, String nombre, String apellido, Date fechaDeNacimiento, String nacionalidad,
 			long telefono, Integer reservaId) {
 		try {
-			final PreparedStatement statement = con.prepareStatement("UPDATE huespedes SET " + " Nombre = ? " + ", Apellido = ?" + ", Fecha_de_nacimiento = ?"
-		+ ", Nacionalidad = ?" + ", Telefono = ?" + "Id_Reserva = ?" + "WHERE id = ?");
+			final PreparedStatement statement = con.prepareStatement("UPDATE huespedes SET Nombre = ?, Apellido = ?, Fecha_de_nacimiento = ?, Nacionalidad = ?, "
+					+ "Telefono = ?, Id_Reserva = ? WHERE id = ?");			
 			try (statement) {
 				statement.setString(1, nombre);
 				statement.setString(2, apellido);
@@ -139,7 +141,7 @@ public class HuespedDAO {
 	
 	public int eliminar(Integer id) {
 		try (con) {
-			final PreparedStatement statement = con.prepareStatement("DELETE FROM Reservas WHERE id = ?");
+			final PreparedStatement statement = con.prepareStatement("DELETE FROM huespedes WHERE id = ?");
 
 			try (statement) {
 				statement.setInt(1, id);

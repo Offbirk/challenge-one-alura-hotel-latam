@@ -337,8 +337,8 @@ public class RegistroHuesped extends JFrame {
 		labelExit.setHorizontalAlignment(SwingConstants.CENTER);
 		labelExit.setForeground(SystemColor.black);
 		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
-	}
-	
+	}		
+
 	//TODO
 	private void guardar() {
 		Integer reservaId = Integer.parseInt(txtNreserva.getText());

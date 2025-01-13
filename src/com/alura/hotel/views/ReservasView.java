@@ -67,6 +67,7 @@ public class ReservasView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ReservasView(Reserva reserva) {		
 		super("Reserva");
 		this.reserva = new Reserva();

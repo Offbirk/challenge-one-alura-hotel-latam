@@ -16,6 +16,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -106,7 +108,6 @@ public class Busqueda extends JFrame {
 		panel.addTab("Reservas", new ImageIcon(Busqueda.class.getResource("/imagenes/reservado.png")), scroll_table,
 				null);
 		scroll_table.setVisible(true);
-		cargarTablaReserva();
 
 		tbHuespedes = new JTable();
 		tbHuespedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -123,7 +124,25 @@ public class Busqueda extends JFrame {
 		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/imagenes/pessoas.png")),
 				scroll_tableHuespedes, null);
 		scroll_tableHuespedes.setVisible(true);
-		cargarTablaHuespedes();
+		
+		panel.addMouseListener(new MouseAdapter() {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		        if (e.getClickCount() == 1) {
+		            // Obtener el componente actual seleccionado en la pestaña
+		            Component selectedComponent = panel.getSelectedComponent();
+		            
+		            if (selectedComponent == scroll_table) {
+		                // Lógica para el evento de doble clic en la tabla de "Reservas"		            	
+		                System.out.println("Se activó el evento de doble clic en la tabla de Reservas");
+		            } else if (selectedComponent == scroll_tableHuespedes) {
+		                System.out.println("Se activó el evento de doble clic en la tabla de Huéspedes");
+		                componenteEditar();
+		                componenteEliminar();
+		            }
+		        }
+		    }
+		});
 
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/imagenes/Ha-100px.png")));
@@ -278,9 +297,12 @@ public class Busqueda extends JFrame {
 		btnEditar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				editar();
-				cargarTablaReserva();
-				cargarTablaHuespedes();
+				if(tbReservas.isDisplayable()) {
+					editarTablaReserva();
+				} 
+				if (tbHuespedes.isDisplayable()) {
+					editarTablaHuesped();
+				}
 			}
 		});
 		contentPane.add(btnEditar);
@@ -305,9 +327,12 @@ public class Busqueda extends JFrame {
 		btnEliminar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				eliminar();
-				cargarTablaReserva();
-				cargarTablaHuespedes();
+				if(tbReservas.isDisplayable()) {
+					eliminarfilaReserva();
+				}
+				if(tbHuespedes.isDisplayable()) {
+					eliminarfilaHuesped();					
+				}
 			}
 		});
 		contentPane.add(btnEliminar);
@@ -330,10 +355,11 @@ public class Busqueda extends JFrame {
 		return tbHuespedes.getSelectedRowCount() == 0 || tbHuespedes.getSelectedColumnCount() == 0;
 	}
 	
-	private void editar() {		
-			editarTablaReserva();
-			editarTablaHuesped();		
-	}
+		/**
+		 * Al realizar una consulta valida se cargaran los resultados
+		 * Si quiero editar esos datos, debo cargar la interfaz de ReservaView o HuespedView
+		 * Una vez cargada la tabla con los elementos de esa consulta, puedo editar y guardarlo.	
+		 */
 	
 	private void editarTablaReserva() {
 		if (tieneFilaElegida()) {
@@ -360,29 +386,42 @@ public class Busqueda extends JFrame {
 			JOptionPane.showMessageDialog(this, "Por favor, elija un item");
 			return;
 		} 
+
+			Optional.ofNullable(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), tbHuespedes.getSelectedColumnCount()))
+					.ifPresentOrElse(fila -> {
+						
+						Integer reservaId = Integer.valueOf(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 6).toString());
+						
+						//crear instancia cargando los datos del huesped
+						RegistroHuesped editarDatosHuesped = new RegistroHuesped(reservaId);
+						editarDatosHuesped.setVisible(true);
+					}, () -> JOptionPane.showMessageDialog(this, "Por favor, elija un item"));
+	}	
+	
+	/*private void editarTablaHuesped() {
+		if (tieneFilaElegida1()) {
+			JOptionPane.showMessageDialog(this, "Por favor, elija un item");
+			return;
+		} 
 			Optional.ofNullable(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), tbHuespedes.getSelectedColumnCount()))
 					.ifPresentOrElse(fila -> {
 						Integer id = Integer
 								.valueOf(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 0).toString());
-						String nombre = (String) modelo.getValueAt(tbHuespedes.getSelectedRow(), 1);
-						String apellido = (String) modelo.getValueAt(tbHuespedes.getSelectedRow(), 2);
-						Date fechaDeNacimiento = (Date) modelo.getValueAt(tbHuespedes.getSelectedRow(), 3);
-						String nacionalidad = (String) modelo.getValueAt(tbHuespedes.getSelectedRow(), 4);
-						long telefono = (long) modelo.getValueAt(tbHuespedes.getSelectedRow(), 5);
+						String nombre = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 1);
+						String apellido = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 2);
+						Date fechaDeNacimiento = (Date) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 3);
+						String nacionalidad = (String) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 4);
+						long telefono = (long) modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 5);
 						Integer reservaId = Integer
 								.valueOf(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 6).toString());
-
+						
 						var filasModificadas = this.huespedController.modificar(id, nombre, apellido, fechaDeNacimiento,
 								nacionalidad, telefono, reservaId);
 						JOptionPane.showMessageDialog(this,
 								String.format("%d datos modificados con éxito!", filasModificadas));
 					}, () -> JOptionPane.showMessageDialog(this, "Por favor, elija un item"));		
-	}
+	}*/
 	
-	private void eliminar() {
-			eliminarfilaReserva();
-			eliminarfilaHuesped();		
-	}
 	
 	private void eliminarfilaReserva() {
 		if (tieneFilaElegida()) {
@@ -462,7 +501,7 @@ public class Busqueda extends JFrame {
 	        
 	        try {
 	            int idReserva = Integer.parseInt(criterio);
-	            datos = this.huespedController.buscarPorCriterio(criterio); // Llama a buscarPorCriterio por número de ID
+	            datos = this.huespedController.buscarPorId(criterio); // Llama a buscarPorCriterio por número de ID
 	        } catch (NumberFormatException e) {
 	            datos = this.huespedController.buscarPorApellido(criterio); // Llama a buscarPorApellido por apellido
 	        }
