@@ -9,12 +9,14 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
  */
 public class ConnectionFactory {
 	private DataSource datasource;
-	
+	String DataBaseUrl = System.getenv("DataBaseUrl");
+	String Password = System.getenv("Password");
+
 	public ConnectionFactory() {
 		var pooledDataSource = new ComboPooledDataSource();
-		pooledDataSource.setJdbcUrl("jdbc:mysql://localhost:3306/hotel_alura?useTimeZone=true&serverTimeZone=UTC");
+		pooledDataSource.setJdbcUrl(DataBaseUrl);
 		pooledDataSource.setUser("root");
-		pooledDataSource.setPassword("AirbenderX1980.");
+		pooledDataSource.setPassword(Password);
 		pooledDataSource.setMaxPoolSize(4);
 		
 		this.datasource = pooledDataSource;
